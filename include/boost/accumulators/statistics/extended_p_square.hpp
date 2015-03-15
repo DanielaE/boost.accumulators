@@ -97,7 +97,7 @@ namespace impl
 
             for(std::size_t i = 0; i < num_markers; ++i)
             {
-                this->actual_positions[i] = i + 1;
+                this->actual_positions[i] = static_cast<float_type>(i + 1);
             }
 
             this->positions_increments[0] = 0.;

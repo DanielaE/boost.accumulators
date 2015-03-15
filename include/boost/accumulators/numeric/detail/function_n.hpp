@@ -24,6 +24,11 @@
 #include <boost/type_traits/add_const.hpp>
 #include <boost/type_traits/remove_reference.hpp>
 
+#ifdef BOOST_MSVC
+# pragma warning(push)
+# pragma warning(disable: 4244) // narrowing conversion
+#endif
+
 namespace boost { namespace detail {
 
 # define BOOST_DETAIL_default_arg(z, n, _)                                      \
@@ -144,5 +149,9 @@ struct function_name
 };
 
 }} // namespace boost::detail
+
+#ifdef BOOST_MSVC
+# pragma warning(pop)
+#endif
 
 //#endif // BOOST_DETAIL_FUNCTION_N_DWA2006514_HPP
