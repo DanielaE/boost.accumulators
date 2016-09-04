@@ -118,7 +118,7 @@ namespace impl
                     this->tail_means_.begin()
                   , this->tail_means_.end()
                   , this->tail_means_.begin()
-                  , std::bind2nd(std::divides<float_type>(), factor)
+                  , std::bind(std::divides<float_type>(), std::placeholders::_1, factor)
                 );
             }
             else

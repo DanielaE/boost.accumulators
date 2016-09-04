@@ -99,12 +99,9 @@ namespace boost { namespace numeric
         };                                                                                      \
         template<typename Arg, typename EnableIf>                                               \
         struct Name ## _base                                                                    \
-          : std::unary_function<                                                                \
-                typename remove_const<Arg>::type                                                \
-              , typename result_of_ ## Name<Arg>::type                                          \
-            >                                                                                   \
         {                                                                                       \
-            typename result_of_ ## Name<Arg>::type operator ()(Arg &arg) const                  \
+            typedef typename result_of_ ## Name<Arg>::type result_type;                         \
+            result_type operator ()(Arg &arg) const                                             \
             {                                                                                   \
                 return Op arg;                                                                  \
             }                                                                                   \
@@ -138,14 +135,9 @@ namespace boost { namespace numeric
         };                                                                                      \
         template<typename Left, typename Right, typename EnableIf>                              \
         struct Name ## _base                                                                    \
-          : std::binary_function<                                                               \
-                typename remove_const<Left>::type                                               \
-              , typename remove_const<Right>::type                                              \
-              , typename result_of_ ## Name<Left, Right>::type                                  \
-            >                                                                                   \
         {                                                                                       \
-            typename result_of_ ## Name<Left, Right>::type                                      \
-            operator ()(Left &left, Right &right) const                                         \
+            typedef typename result_of_ ## Name<Left, Right>::type result_type;                 \
+            result_type operator ()(Left &left, Right &right) const                             \
             {                                                                                   \
                 return left Op right;                                                           \
             }                                                                                   \
@@ -220,8 +212,8 @@ namespace boost { namespace numeric
     {
         template<typename Left, typename Right, typename EnableIf>
         struct min_assign_base
-          : std::binary_function<Left, Right, void>
         {
+            typedef void result_type;
             void operator ()(Left &left, Right &right) const
             {
                 if(numeric::less(right, left))
@@ -233,8 +225,8 @@ namespace boost { namespace numeric
 
         template<typename Left, typename Right, typename EnableIf>
         struct max_assign_base
-          : std::binary_function<Left, Right, void>
         {
+            typedef void result_type;
             void operator ()(Left &left, Right &right) const
             {
                 if(numeric::greater(right, left))
@@ -258,8 +250,8 @@ namespace boost { namespace numeric
 
         template<typename To, typename From, typename EnableIf>
         struct promote_base
-          : std::unary_function<From, To>
         {
+            typedef To result_type;
             To operator ()(From &from) const
             {
                 return from;
@@ -268,8 +260,8 @@ namespace boost { namespace numeric
 
         template<typename ToFrom>
         struct promote_base<ToFrom, ToFrom, void>
-          : std::unary_function<ToFrom, ToFrom>
         {
+            typedef ToFrom result_type;
             ToFrom &operator ()(ToFrom &tofrom)
             {
                 return tofrom;
@@ -278,11 +270,11 @@ namespace boost { namespace numeric
 
         template<typename Arg, typename EnableIf>
         struct as_min_base
-          : std::unary_function<Arg, typename remove_const<Arg>::type>
         {
             BOOST_STATIC_ASSERT(std::numeric_limits<typename remove_const<Arg>::type>::is_specialized);
 
-            typename remove_const<Arg>::type operator ()(Arg &) const
+            typedef typename remove_const<Arg>::type result_type;
+            result_type operator ()(Arg &) const
             {
                 return (std::numeric_limits<typename remove_const<Arg>::type>::min)();
             }
@@ -290,11 +282,11 @@ namespace boost { namespace numeric
 
         template<typename Arg>
         struct as_min_base<Arg, typename enable_if<is_floating_point<Arg> >::type>
-          : std::unary_function<Arg, typename remove_const<Arg>::type>
         {
             BOOST_STATIC_ASSERT(std::numeric_limits<typename remove_const<Arg>::type>::is_specialized);
 
-            typename remove_const<Arg>::type operator ()(Arg &) const
+            typedef typename remove_const<Arg>::type result_type;
+            result_type operator ()(Arg &) const
             {
                 return -(std::numeric_limits<typename remove_const<Arg>::type>::max)();
             }
@@ -302,11 +294,11 @@ namespace boost { namespace numeric
 
         template<typename Arg, typename EnableIf>
         struct as_max_base
-          : std::unary_function<Arg, typename remove_const<Arg>::type>
         {
             BOOST_STATIC_ASSERT(std::numeric_limits<typename remove_const<Arg>::type>::is_specialized);
 
-            typename remove_const<Arg>::type operator ()(Arg &) const
+            typedef typename remove_const<Arg>::type result_type;
+            result_type operator ()(Arg &) const
             {
                 return (std::numeric_limits<typename remove_const<Arg>::type>::max)();
             }
@@ -314,9 +306,9 @@ namespace boost { namespace numeric
 
         template<typename Arg, typename EnableIf>
         struct as_zero_base
-          : std::unary_function<Arg, typename remove_const<Arg>::type>
         {
-            typename remove_const<Arg>::type operator ()(Arg &) const
+            typedef typename remove_const<Arg>::type result_type;
+            result_type operator ()(Arg &) const
             {
                 return numeric::zero<typename remove_const<Arg>::type>::value;
             }
@@ -324,9 +316,9 @@ namespace boost { namespace numeric
 
         template<typename Arg, typename EnableIf>
         struct as_one_base
-          : std::unary_function<Arg, typename remove_const<Arg>::type>
         {
-            typename remove_const<Arg>::type operator ()(Arg &) const
+            typedef typename remove_const<Arg>::type result_type;
+            result_type operator ()(Arg &) const
             {
                 return numeric::one<typename remove_const<Arg>::type>::value;
             }
