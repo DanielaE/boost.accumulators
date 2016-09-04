@@ -248,7 +248,6 @@ namespace impl
         ///////////////////////////////////////////////////////////////////////////////
         //
         struct indirect_cmp
-          : std::binary_function<std::size_t, std::size_t, bool>
         {
             indirect_cmp(std::vector<Sample> const &s)
               : samples(s)

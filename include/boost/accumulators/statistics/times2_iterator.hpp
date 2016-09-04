@@ -23,7 +23,7 @@ namespace boost { namespace accumulators
 namespace detail
 {
     typedef transform_iterator<
-        std::binder1st<std::multiplies<std::size_t> >
+        decltype(std::bind(std::multiplies<std::size_t>(), 2, std::placeholders::_1))
       , counting_iterator<std::size_t>
     > times2_iterator;
 
@@ -31,7 +31,7 @@ namespace detail
     {
         return make_transform_iterator(
             make_counting_iterator(i)
-          , std::bind1st(std::multiplies<std::size_t>(), 2)
+          , std::bind(std::multiplies<std::size_t>(), 2, std::placeholders::_1)
         );
     }
 
